@@ -1,5 +1,6 @@
 import '../../scss/Questions.scss';
 import { useState, useEffect } from 'react';
+import { FinalScore } from '../FinalScore';
 const axios = require('axios').default;
 
 
@@ -15,6 +16,7 @@ export function Questions() {
     const [minutesCounter, setMinutesCounter] = useState(0);
     const [questionCounter, setQuestionCounter] = useState(1);
     const [finalScore, setFinalScore] = useState([]);
+    const [step, setStep] = useState(0);
 
 
     // Função para pegar as perguntas e definir os estados
@@ -52,8 +54,7 @@ export function Questions() {
         } else if (questionCounter >= 10) {
             alert('Fim de jogo Você acertou ' + score + ' questões em ' + minutesCounter + ' minutos e ' + secondsCounter + ' segundos')
             setQuestionCounter(1);
-            setScore(0);
-            window.location.assign('http://localhost:3000/questions/score');
+            setStep(1);
         } else {
             alert('Ahh... Não foi dessa vez! Vamos para a próxima.')
             setQuestionCounter(questionCounter + 1);
@@ -72,8 +73,7 @@ export function Questions() {
         } else if (questionCounter >= 10) {
             alert('Fim de jogo Você acertou ' + score + ' questões em ' + minutesCounter + ' minutos e ' + secondsCounter + ' segundos')
             setQuestionCounter(1);
-            setScore(0);
-            window.location.assign('http://localhost:3000/questions/score');
+            setStep(1);
         } else {
             alert('Ahh... Não foi dessa vez! Vamos para a próxima.')
             setQuestionCounter(questionCounter + 1);
@@ -81,33 +81,60 @@ export function Questions() {
         }
     }
 
-    console.log(finalScore)
+    function RenderQuestions() {
+        return (
+            <>
+                <div className="trivia-questions-container">
+                    <nav>
+                        <ul>
+                            <div className='question-score-container'>
+                                <li>Question: {questionCounter} of 10</li>
+                                <li>Score: {score}</li>
+                            </div>
+                            <li className='question-category'>Question Category</li>
+                            <li>TIME: {minutesCounter}:{secondsCounter}</li>
+                        </ul>
+                        <p>{category}</p>
+                    </nav>
+                    <section className="trivia-questions">
+                        <div className='trivia-question-title'>
+                            <h2>{questions}</h2>
+                        </div>
+                        <div className='trivia-questions-btn'>
+                            <button id='btn-true' onClick={rightAnswerTrue}>True</button>
+                            <button id='btn-false' onClick={rightAnswerFalse}>False</button>
+                        </div>
+                    </section>
+                </div >
+            </>
+        )
+    }
+
+    function renderContent() {
+        switch (step) {
+            case 0:
+                return (
+                    <>
+                        <RenderQuestions />
+                    </>
+                )
+            case 1:
+                return (
+                    <>
+                        <FinalScore finalScore={finalScore} score={score} />
+                    </>
+                )
+            default:
+                return '';
+        }
+    }
 
 
     return (
         <>
-            <div className="trivia-questions-container">
-                <nav>
-                    <ul>
-                        <div className='question-score-container'>
-                            <li>Question: {questionCounter} of 10</li>
-                            <li>Score: {score}</li>
-                        </div>
-                        <li className='question-category'>Question Category</li>
-                        <li>TIME: {minutesCounter}:{secondsCounter}</li>
-                    </ul>
-                    <p>{category}</p>
-                </nav>
-                <section className="trivia-questions">
-                    <div className='trivia-question-title'>
-                        <h2>{questions}</h2>
-                    </div>
-                    <div className='trivia-questions-btn'>
-                        <button id='btn-true' onClick={rightAnswerTrue}>True</button>
-                        <button id='btn-false' onClick={rightAnswerFalse}>False</button>
-                    </div>
-                </section>
-            </div >
+            {
+                renderContent()
+            }
         </>
     )
 }
