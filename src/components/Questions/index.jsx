@@ -17,6 +17,7 @@ export function Questions() {
     const [questionCounter, setQuestionCounter] = useState(1);
     const [finalScore, setFinalScore] = useState([]);
     const [step, setStep] = useState(0);
+    const [scoreMensage, setScoreMensage] = useState('');
 
 
     // Função para pegar as perguntas e definir os estados
@@ -43,22 +44,39 @@ export function Questions() {
         }
     }, [secondsCounter, minutesCounter])
 
+    // Função para exibir o resultado final
+    useEffect(() => {
+        if (questionCounter === 11) {
+            alert('Fim de jogo Você acertou ' + score + ' questões em ' + minutesCounter + ' minutos e ' + secondsCounter + ' segundos');
+            setFinalMensage()
+            setStep(1);
+        }
+    }, [questionCounter])
+
+
+    function setFinalMensage() {
+        if (score === 10) {
+            setScoreMensage('Parabéns, você acertou todas as questões! 😍')
+        } else if (score <= 3) {
+            setScoreMensage('Você realmente tentou? Você acertou ' + score + ' questões! 😓')
+        } else if (score <= 7) {
+            setScoreMensage('Nada mal, mas você consegue melhorar! Você acertou ' + score + ' questões! 👍')
+        } else if (score <= 9) {
+            setScoreMensage('Quase lá, você acertou ' + score + ' questões! 💪')
+        }
+    }
 
 
     // Validação de resposta (true) e atualização do score
     function rightAnswerTrue() {
-        if (correctAnswer === 'True' && questionCounter <= 9) {
+        if (correctAnswer === 'True' && questionCounter <= 10) {
             setQuestionCounter(questionCounter + 1);
             setScore(score + 1);
-            setFinalScore([...finalScore, 'true'])
-        } else if (questionCounter >= 10) {
-            alert('Fim de jogo Você acertou ' + score + ' questões em ' + minutesCounter + ' minutos e ' + secondsCounter + ' segundos')
-            setQuestionCounter(1);
-            setStep(1);
+            setFinalScore([...finalScore, [<p style={{ color: '#4BBE5E' }}>True</p>]])
         } else {
             alert('Ahh... Não foi dessa vez! Vamos para a próxima.')
             setQuestionCounter(questionCounter + 1);
-            setFinalScore([...finalScore, 'false'])
+            setFinalScore([...finalScore, [<p style={{ color: '#FF4242' }}>False</p>]])
         }
     }
 
@@ -66,20 +84,19 @@ export function Questions() {
 
     // Validação de resposta (false) e atualização do score
     function rightAnswerFalse() {
-        if (correctAnswer === 'False' && questionCounter <= 9) {
+        if (correctAnswer === 'False' && questionCounter <= 10) {
             setQuestionCounter(questionCounter + 1);
             setScore(score + 1);
-            setFinalScore([...finalScore, 'false'])
-        } else if (questionCounter >= 10) {
-            alert('Fim de jogo Você acertou ' + score + ' questões em ' + minutesCounter + ' minutos e ' + secondsCounter + ' segundos')
-            setQuestionCounter(1);
-            setStep(1);
+            setFinalScore([...finalScore, [<p style={{ color: '#4BBE5E' }}>False</p>]])
         } else {
             alert('Ahh... Não foi dessa vez! Vamos para a próxima.')
             setQuestionCounter(questionCounter + 1);
-            setFinalScore([...finalScore, 'true'])
+            setFinalScore([...finalScore, [<p style={{ color: '#FF4242' }}>True</p>]])
         }
     }
+
+
+
 
     function RenderQuestions() {
         return (
@@ -121,7 +138,7 @@ export function Questions() {
             case 1:
                 return (
                     <>
-                        <FinalScore finalScore={finalScore} score={score} />
+                        <FinalScore finalScore={finalScore} score={score} mensage={scoreMensage} />
                     </>
                 )
             default:

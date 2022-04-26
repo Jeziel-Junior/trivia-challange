@@ -3,7 +3,7 @@ import '../../scss/FinalScore.scss';
 
 
 
-export function FinalScore({ finalScore, score }) {
+export function FinalScore({ finalScore, score, mensage }) {
 
 
     function handleClick() {
@@ -18,6 +18,7 @@ export function FinalScore({ finalScore, score }) {
                 <ol>
                     {finalScore.map(score => <li>{score}</li>)}
                 </ol>
+                <h3>{mensage}</h3>
                 <h2>You Scored {score}/10</h2>
                 <button type="button" onClick={handleClick}>Play Again</button>
             </div>
