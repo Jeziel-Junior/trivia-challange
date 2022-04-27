@@ -2,10 +2,10 @@ import '../../scss/Questions.scss';
 import { useState, useEffect } from 'react';
 import { FinalScore } from '../FinalScore';
 import UIfx from 'uifx';
-import CorrectAnswer from '../sounds/correctAnswer.mp3';
-import IncorrectAnswer from '../sounds/incorrectAnswer.wav';
-import BackgroundMusic from '../sounds/backgroundMusic.mp3';
-import Congrats from '../sounds/congrats.wav';
+import CorrectAnswer from '../../sounds/correctAnswer.mp3';
+import IncorrectAnswer from '../../sounds/incorrectAnswer.wav';
+import BackgroundMusic from '../../sounds/backgroundMusic.mp3';
+import Congrats from '../../sounds/congrats.wav';
 const axios = require('axios').default;
 
 
