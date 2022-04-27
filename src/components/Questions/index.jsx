@@ -128,7 +128,7 @@ export function Questions() {
                     </nav>
                     <section className="trivia-questions">
                         <div className='trivia-question-title'>
-                            <h2>{questions}</h2>
+                            <h2 dangerouslySetInnerHTML={{ __html: questions }}></h2>
                         </div>
                         <div className='trivia-questions-btn'>
                             <button id='btn-true' className={btnColorTrue} onClick={rightAnswerTrue}>True</button>
