@@ -6,7 +6,6 @@ const axios = require('axios').default;
 
 export function Questions() {
 
-
     // Criação de estados
     const [questions, setQuestions] = useState([]);
     const [category, setCategory] = useState([]);
@@ -18,25 +17,27 @@ export function Questions() {
     const [finalScore, setFinalScore] = useState([]);
     const [step, setStep] = useState(0);
     const [scoreMensage, setScoreMensage] = useState('');
+    const [btnColorTrue, setBtnColorTrue] = useState('');
+    const [btnColorFalse, setBtnColorFalse] = useState('');
 
 
-    // Função para pegar as perguntas e definir os estados
+    // Puxar perguntas e definir os estados
     useEffect(() => {
-        axios.get('https://opentdb.com/api.php?amount=1&type=boolean').then(({ data }) => {
-            setQuestions(data.results[0].question)
-            setCategory(data.results[0].category)
-            setCorrectAnswer(data.results[0].correct_answer)
-        });
+        setTimeout(() => {
+            axios.get('https://opentdb.com/api.php?amount=1&type=boolean').then(({ data }) => {
+                setQuestions(data.results[0].question)
+                setCategory(data.results[0].category)
+                setCorrectAnswer(data.results[0].correct_answer)
+            });
+        }, 800);
     }, [questionCounter]);
 
-
-    // Função de contagem de tempo (segundos)
+    // Contagem de tempo (segundos)
     useEffect(() => {
-        secondsCounter < 60 && setTimeout(() => setSecondsCounter(secondsCounter + 1), 1000);
+        setTimeout(() => secondsCounter < 60 && setSecondsCounter(secondsCounter + 1), 1000);
     }, [secondsCounter])
 
-
-    // Função de contagem de tempo (minutos)
+    // Contagem de tempo (minutos)
     useEffect(() => {
         if (secondsCounter === 60) {
             setSecondsCounter(0);
@@ -44,17 +45,19 @@ export function Questions() {
         }
     }, [secondsCounter, minutesCounter])
 
-    // Função para exibir o resultado final
+    // Resultado final
     useEffect(() => {
-        if (questionCounter === 11) {
-            alert('Fim de jogo Você acertou ' + score + ' questões em ' + minutesCounter + ' minutos e ' + secondsCounter + ' segundos');
-            setFinalMensage()
-            setStep(1);
-        }
+        setTimeout(() => {
+            if (questionCounter > 10) {
+                alert('Fim de jogo Você acertou ' + score + ' questões em ' + minutesCounter + ' minutos e ' + secondsCounter + ' segundos');
+                setFinalMensage()
+                setStep(1);
+            }
+        }, 500);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [questionCounter])
 
-
+    // Mensagem Final
     function setFinalMensage() {
         if (score === 10) {
             setScoreMensage('Parabéns, você acertou todas as questões! 😍')
@@ -67,37 +70,46 @@ export function Questions() {
         }
     }
 
-
     // Validação de resposta (true) e atualização do score
     function rightAnswerTrue() {
         if (correctAnswer === 'True' && questionCounter <= 10) {
-            setQuestionCounter(questionCounter + 1);
-            setScore(score + 1);
-            setFinalScore([...finalScore, [<p style={{ color: '#4BBE5E' }}>True</p>]])
+            setTimeout(() => {
+                setQuestionCounter(questionCounter + 1);
+                setScore(score + 1);
+                setFinalScore([...finalScore, [<p style={{ color: '#4BBE5E' }}>True</p>]])
+                setBtnColorTrue('btn-green');
+                setTimeout(() => setBtnColorTrue(''), 1000);
+            }, 500);
+
         } else {
-            alert('Ahh... Não foi dessa vez! Vamos para a próxima.')
-            setQuestionCounter(questionCounter + 1);
-            setFinalScore([...finalScore, [<p style={{ color: '#FF4242' }}>False</p>]])
+            setTimeout(() => {
+                setQuestionCounter(questionCounter + 1);
+                setFinalScore([...finalScore, [<p style={{ color: '#FF4242' }}>False</p>]])
+                setBtnColorTrue('btn-red')
+                setTimeout(() => setBtnColorTrue(''), 1000);
+            }, 500);
         }
     }
-
-
 
     // Validação de resposta (false) e atualização do score
     function rightAnswerFalse() {
         if (correctAnswer === 'False' && questionCounter <= 10) {
-            setQuestionCounter(questionCounter + 1);
-            setScore(score + 1);
-            setFinalScore([...finalScore, [<p style={{ color: '#4BBE5E' }}>False</p>]])
+            setTimeout(() => {
+                setQuestionCounter(questionCounter + 1);
+                setScore(score + 1);
+                setFinalScore([...finalScore, [<p style={{ color: '#4BBE5E' }}>False</p>]])
+                setBtnColorFalse('btn-green')
+                setTimeout(() => setBtnColorFalse(''), 1000);
+            }, 500);
         } else {
-            alert('Ahh... Não foi dessa vez! Vamos para a próxima.')
-            setQuestionCounter(questionCounter + 1);
-            setFinalScore([...finalScore, [<p style={{ color: '#FF4242' }}>True</p>]])
+            setTimeout(() => {
+                setQuestionCounter(questionCounter + 1);
+                setFinalScore([...finalScore, [<p style={{ color: '#FF4242' }}>True</p>]])
+                setBtnColorFalse('btn-red')
+                setTimeout(() => setBtnColorFalse(''), 1000);
+            }, 500);
         }
     }
-
-
-
 
     function RenderQuestions() {
         return (
@@ -119,8 +131,8 @@ export function Questions() {
                             <h2>{questions}</h2>
                         </div>
                         <div className='trivia-questions-btn'>
-                            <button id='btn-true' onClick={rightAnswerTrue}>True</button>
-                            <button id='btn-false' onClick={rightAnswerFalse}>False</button>
+                            <button id='btn-true' className={btnColorTrue} onClick={rightAnswerTrue}>True</button>
+                            <button id='btn-false' className={btnColorFalse} onClick={rightAnswerFalse}>False</button>
                         </div>
                     </section>
                 </div >
@@ -146,7 +158,6 @@ export function Questions() {
                 return '';
         }
     }
-
 
     return (
         <>

@@ -78,6 +78,43 @@
             background: #5a35fd;
         }
     }  
+    .btn-green{
+        animation: piscarVerde 2s ease-in-out 0s infinite ;
+    }
+    .btn-red{
+        animation: piscarVermelho 2s ease-in-out 0s infinite ;
+    
+    }
+
+    @keyframes piscarVerde{
+        0%{
+            background-color: #38E9BB;
+            border: 3px solid white;
+        }
+        50%{
+            background-color: #a6dfcf;
+            border: 3px solid white;
+        }
+        100%{
+            background-color: #38E9BB;
+            border: 3px solid white;
+        }
+    }
+
+    @keyframes piscarVermelho {
+        0% {
+            background-color: #FF5252;
+            border: 3px solid white;
+        }
+        50% {
+            background-color: #fa9696;
+            border: 3px solid white;
+        }
+        100% {
+            background-color: #FF5252;
+            border: 3px solid white;
+        } 
+    }
     }
     
    
