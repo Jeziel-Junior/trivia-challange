@@ -1,6 +1,11 @@
 import '../../scss/Questions.scss';
 import { useState, useEffect } from 'react';
 import { FinalScore } from '../FinalScore';
+import UIfx from 'uifx';
+import CorrectAnswer from '../sounds/correctAnswer.mp3';
+import IncorrectAnswer from '../sounds/incorrectAnswer.wav';
+import BackgroundMusic from '../sounds/backgroundMusic.mp3';
+import Congrats from '../sounds/congrats.wav';
 const axios = require('axios').default;
 
 
@@ -20,6 +25,36 @@ export function Questions() {
     const [btnColorTrue, setBtnColorTrue] = useState('');
     const [btnColorFalse, setBtnColorFalse] = useState('');
 
+    // Efeitos Sonoros do jogo
+    const soundCorrectAnswer = new UIfx(
+        CorrectAnswer,
+        {
+            volume: 0.1, // number between 0.0 ~ 1.0
+            throttleMs: 100
+        }
+    )
+    const soundIncorrectAnswer = new UIfx(
+        IncorrectAnswer,
+        {
+            volume: 0.15, // number between 0.0 ~ 1.0
+            throttleMs: 100
+        }
+    )
+    const backgroundMusic = new UIfx(
+        BackgroundMusic,
+        {
+            volume: 0.15, // number between 0.0 ~ 1.0
+            throttleMs: 100
+        }
+    )
+    const congrats = new UIfx(
+        Congrats,
+        {
+            volume: 0.5, // number between 0.0 ~ 1.0
+            throttleMs: 100
+        }
+    )
+
 
     // Puxar perguntas e definir os estados
     useEffect(() => {
@@ -31,6 +66,13 @@ export function Questions() {
             });
         }, 800);
     }, [questionCounter]);
+
+    // Tocar musica de fundo
+    useEffect(() => {
+        setTimeout(() => {
+            backgroundMusic.play();
+        }, 800);
+    }, [0]);
 
     // Contagem de tempo (segundos)
     useEffect(() => {
@@ -45,12 +87,13 @@ export function Questions() {
         }
     }, [secondsCounter, minutesCounter])
 
-    // Resultado final
+    // Mostrar resultado final
     useEffect(() => {
         setTimeout(() => {
             if (questionCounter > 10) {
                 alert('Fim de jogo Você acertou ' + score + ' questões em ' + minutesCounter + ' minutos e ' + secondsCounter + ' segundos');
                 setFinalMensage()
+                congrats.play();
                 setStep(1);
             }
         }, 500);
@@ -78,6 +121,7 @@ export function Questions() {
                 setScore(score + 1);
                 setFinalScore([...finalScore, [<p style={{ color: '#4BBE5E' }}>True</p>]])
                 setBtnColorTrue('btn-green');
+                soundCorrectAnswer.play();
                 setTimeout(() => setBtnColorTrue(''), 1000);
             }, 500);
 
@@ -86,6 +130,7 @@ export function Questions() {
                 setQuestionCounter(questionCounter + 1);
                 setFinalScore([...finalScore, [<p style={{ color: '#FF4242' }}>False</p>]])
                 setBtnColorTrue('btn-red')
+                soundIncorrectAnswer.play();
                 setTimeout(() => setBtnColorTrue(''), 1000);
             }, 500);
         }
@@ -99,6 +144,7 @@ export function Questions() {
                 setScore(score + 1);
                 setFinalScore([...finalScore, [<p style={{ color: '#4BBE5E' }}>False</p>]])
                 setBtnColorFalse('btn-green')
+                soundCorrectAnswer.play();
                 setTimeout(() => setBtnColorFalse(''), 1000);
             }, 500);
         } else {
@@ -106,11 +152,14 @@ export function Questions() {
                 setQuestionCounter(questionCounter + 1);
                 setFinalScore([...finalScore, [<p style={{ color: '#FF4242' }}>True</p>]])
                 setBtnColorFalse('btn-red')
+                soundIncorrectAnswer.play();
                 setTimeout(() => setBtnColorFalse(''), 1000);
             }, 500);
         }
     }
 
+
+    // Renderização das perguntas
     function RenderQuestions() {
         return (
             <>
@@ -140,6 +189,7 @@ export function Questions() {
         )
     }
 
+    // Switch entre tela do jogo e tela do resultado
     function renderContent() {
         switch (step) {
             case 0:
@@ -159,6 +209,7 @@ export function Questions() {
         }
     }
 
+    // Renderização do jogo
     return (
         <>
             {
